@@ -1,8 +1,5 @@
 # NPM
 node_modules
 
-# Vite
-dist
-
 # PWA Plugin
 dev-dist

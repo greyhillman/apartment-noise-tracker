@@ -1,0 +1,14 @@
+{
+    "$schema": "https://json.schemastore.org/web-manifest-combined.json",
+    "name": "Apartment Noise Tracker",
+    "start_url": "/",
+    "display": "standalone",
+    "icons": [
+        {
+            "src": "../icons/app.svg",
+            "type": "image/svg+xml",
+            "sizes": "any",
+            "purpose": "any"
+        }
+    ]
+}
