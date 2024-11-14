@@ -14,8 +14,6 @@ declare const CACHE_RESOURCES: string[];
 
 self.addEventListener("install", event => {
     const fn = async () => {
-        console.log("ServiceWorker: install");
-
         const cache = await caches.open(CURRENT_CACHE_KEY);
 
         cache.addAll(CACHE_RESOURCES)
@@ -27,8 +25,6 @@ self.addEventListener("install", event => {
 self.addEventListener("activate", event => {
 
     const fn = async () => {
-        console.log("ServiceWorker: activate");
-
         const keys = await caches.keys();
 
         const deletions = keys
@@ -47,8 +43,6 @@ self.addEventListener("fetch", event => {
     const request = event.request;
     const fn: () => Promise<Response> = async () => {
         if (request.mode === "navigate") {
-            console.log("fetch: navigation");
-
             const cachedResponse = await caches.match("/");
             if (cachedResponse) {
                 return cachedResponse;
@@ -81,14 +75,4 @@ self.addEventListener("fetch", event => {
     }
 
     event.respondWith(fn());
-});
-
-self.addEventListener("message", message => {
-    console.log(`ServiceWorker: message received`);
-    console.log(message);
-});
-
-self.addEventListener("messageerror", error => {
-    console.log(`ServiceWorker: message error`);
-    console.log(error);
 });

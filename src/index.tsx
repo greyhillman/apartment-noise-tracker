@@ -15,18 +15,3 @@ render(() => (
         <App />
     </WorkerProvider>
 ), root!);
-
-
-self.addEventListener("message", message => {
-    console.log(`Main: message received: ${message}`);
-});
-
-self.addEventListener("messageerror", error => {
-    console.log(`Main: message error: ${error}`);
-});
-
-navigator.serviceWorker.addEventListener("message", message => {
-    console.log(`Main: service worker message received: start`);
-    console.log(message);
-    console.log(`Main: service worker message received: end`);
-});

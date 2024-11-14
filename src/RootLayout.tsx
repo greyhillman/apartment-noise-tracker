@@ -3,8 +3,6 @@ import { Component, ErrorBoundary, ParentProps } from "solid-js";
 
 export const RootLayout: Component<ParentProps> = props => {
     const onError = (err: any, reset: () => void) => {
-        console.error(err);
-
         return (
             <p>Error occurred: <button onClick={reset}>Reset</button></p>
         );

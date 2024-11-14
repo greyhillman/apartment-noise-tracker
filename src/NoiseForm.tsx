@@ -41,7 +41,6 @@ export const NoiseForm: Component<{}> = props => {
     const [isSubmitting, setSubmitting] = createSignal<boolean>(false);
 
     const setTimeToNow = () => {
-        console.log("Setting time to now...");
         const now = Temporal.Now.plainDateTimeISO();
 
         setData({
@@ -79,16 +78,6 @@ export const NoiseForm: Component<{}> = props => {
     worker.addEventListener("message", onMessage);
     onCleanup(() => {
         worker.removeEventListener("message", onMessage);
-    });
-
-    const onError = (message: ErrorEvent) => {
-        console.error(`NoiseForm: caught error from worker`);
-        console.error(message);
-    }
-
-    worker.addEventListener("error", onError);
-    onCleanup(() => {
-        worker.removeEventListener("error", onError);
     });
 
     createEffect(oldSubmitting => {

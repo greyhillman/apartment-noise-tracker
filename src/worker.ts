@@ -102,10 +102,6 @@ self.addEventListener("message", message => {
         return;
     }
 
-    console.log(`Worker: received message: start`);
-    console.log(message);
-    console.log(`Worker: received message: end`);
-
     const errorHandler = (err: any) => {
         postMessage({
             type: "error",
@@ -119,11 +115,6 @@ self.addEventListener("message", message => {
     } catch (err) {
         errorHandler(err);
     }
-});
-
-self.addEventListener("error", message => {
-    console.error(`Worker: caught error:`);
-    console.error(message);
 });
 
 async function handleMessage(message: MessageEvent<IncomingMessage>) {
