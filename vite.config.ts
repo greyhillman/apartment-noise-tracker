@@ -39,6 +39,9 @@ export default defineConfig({
       ],
     },
   },
+  // Since we deploy to a nested page (github.io/apartment-noise-tracker), using
+  // the default "/" breaks links
+  base: "./",
   server: {
     port: 3000,
     headers: {
