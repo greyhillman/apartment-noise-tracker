@@ -7,7 +7,9 @@ import { NotFound } from './NotFound';
 
 const App: Component = () => {
   return (
-    <Router root={RootLayout}>
+    // When deployed to GitHub pages, the site will be under "greyhillman.github.io/apartment-noise-tracker".
+    // This screws up SolidJS router as it expects to operate at "/" and not "/apartment-noise-tracker".
+    <Router root={RootLayout} base={import.meta.env.BASE_URL}>
       <Route path="/" component={NoiseForm} />
       <Route path="/history" component={History} />
       <Route path="*" component={NotFound} />
