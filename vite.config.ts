@@ -13,7 +13,6 @@ export default defineConfig({
     // devtools(),
     solidPlugin(),
     VitePWA({
-      mode: "development",
       injectRegister: 'script-defer',
       strategies: 'injectManifest',
 
@@ -21,7 +20,25 @@ export default defineConfig({
       srcDir: "src",
       filename: "sw.ts",
 
-      manifest: false, // Use our own manifest file
+      manifest: {
+        name: "Apartment Noise Tracker",
+        short_name: "Apt Noise",
+        description: "Track noise from your apartment neighbours.",
+        start_url: "/apartment-noise-tracker", // Follow Github pages layout
+        scope: "/apartment-noise-tracker",
+        icons: [
+          {
+            src: "./icons/pwa-192x192.png",
+            sizes: "192x192",
+            type: "image/png",
+          },
+          {
+            src: "./icons/pwa-512x512.png",
+            sizes: "512x512",
+            type: "image/png",
+          }
+        ]
+      },
       injectManifest: {
         injectionPoint: "CACHE_RESOURCES",
         swSrc: "src/sw.ts",
