@@ -134,7 +134,6 @@ export const History: Component<{}> = props => {
             return {
                 name: day,
                 data: Array(24).keys()
-                    .map(index => index + 1)
                     .map(hour => {
                         if (index in data && hour in data[index]) {
                             return data[index][hour];
