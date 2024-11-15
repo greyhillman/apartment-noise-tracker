@@ -26,6 +26,7 @@ export default defineConfig({
         description: "Track noise from your apartment neighbours.",
         start_url: "/apartment-noise-tracker", // Follow Github pages layout
         scope: "/apartment-noise-tracker",
+        theme_color: "#ffffff",
         icons: [
           {
             src: "./icons/pwa-192x192.png",
