@@ -119,13 +119,13 @@ export const History: Component<{}> = props => {
 
     const series: () => ApexAxisChartSeries = () => {
         const days = [
-            "Sunday",
             "Monday",
             "Tuesday",
             "Wednesday",
             "Thursday",
             "Friday",
             "Saturday",
+            "Sunday",
         ];
 
         const data = chart();
@@ -135,8 +135,9 @@ export const History: Component<{}> = props => {
                 name: day,
                 data: Array(24).keys()
                     .map(hour => {
-                        if (index in data && hour in data[index]) {
-                            return data[index][hour];
+                        const oneBasedWeekDay = index + 1;
+                        if (oneBasedWeekDay in data && hour in data[oneBasedWeekDay]) {
+                            return data[oneBasedWeekDay][hour];
                         }
 
                         return 0;
