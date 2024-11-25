@@ -20,6 +20,9 @@ export default defineConfig({
       srcDir: "src",
       filename: "sw.ts",
 
+      includeAssets: [
+        "**/*",
+      ],
       manifest: {
         name: "Apartment Noise Tracker",
         short_name: "Apt Noise",
