@@ -166,7 +166,7 @@ export const History: Component<{}> = props => {
     return (
         <article>
             <header>History</header>
-            <form class="history" action={null} onSubmit={search}>
+            <form class="history" action={null} onSubmit={e => { e.preventDefault(); search(); }}>
                 <fieldset>
                     <legend>Date Range</legend>
                     <label>
