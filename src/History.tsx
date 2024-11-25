@@ -162,7 +162,6 @@ export const History: Component<{}> = props => {
     };
 
     createEffect(search);
-    search();
 
     return (
         <article>
