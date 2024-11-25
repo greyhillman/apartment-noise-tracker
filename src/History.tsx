@@ -80,6 +80,20 @@ export const History: Component<{}> = props => {
         name: "listener",
     });
 
+    // https://sashamaps.net/docs/resources/20-colors/
+    // Picked 7 from the middle row.
+    //
+    // Colors must be in "#rgb" format as it's used in SVG.
+    const weekDayColors = [
+        "#e6194b",
+        "#f58231",
+        "#ffe119",
+        "#bfef45",
+        "#3cb44b",
+        "#42d4f4",
+        "#4363d8",
+    ];
+
     const [options] = createSignal<ApexCharts.ApexOptions>({
         chart: {
             animations: {
@@ -115,6 +129,7 @@ export const History: Component<{}> = props => {
                 },
             }
         },
+        colors: weekDayColors,
     });
 
     const series: () => ApexAxisChartSeries = () => {
@@ -244,7 +259,7 @@ export const History: Component<{}> = props => {
             </form>
             <section>
                 <header>Chart</header>
-                <figure>
+                <figure class="chart">
                     <SolidApexCharts height="500px" width="100%" type="line" options={options()} series={series()} />
                     <figcaption>Day of the week</figcaption>
                 </figure>

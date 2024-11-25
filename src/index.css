@@ -5,8 +5,34 @@
     padding: 0;
 }
 
-html {
+:root {
     --golden-ratio: 1.61803399;
+    --font-color: black;
+    --background-color: white;
+    --button-color: rgb(227, 227, 227);
+    --link-color: blue;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --font-color: white;
+        --background-color: #202020;
+        --button-color: #424242;
+        --link-color: lightblue;
+    }
+}
+
+a {
+    color: var(--link-color);
+
+    &:visited {
+        color: var(--link-color);
+    }
+}
+
+body {
+    color: var(--font-color);
+    background-color: var(--background-color);
 }
 
 body {
@@ -113,8 +139,45 @@ fieldset {
 }
 
 input {
+    background-color: var(--background-color);
+    color: var(--font-color);
+}
+
+input {
     display: block;
-    border: solid 2px black;
+    border: solid 2px var(--font-color);
+}
+
+button {
+    color: var(--font-color);
+    background-color: var(--button-color);
+}
+
+button {
+    cursor: pointer;
+
+    border: solid 2px var(--font-color);
+    border-radius: 0.5em;
+
+    &:hover {
+        filter: brightness(90%);
+    }
+
+    &:active {
+        filter: brightness(80%);
+    }
+}
+
+@media (prefers-color-scheme: dark) {
+    button {
+        &:hover {
+            filter: brightness(110%);
+        }
+
+        &:active {
+            filter: brightness(120%);
+        }
+    }
 }
 
 input[type="text"],
@@ -205,5 +268,33 @@ ol.page {
     form.history {
         display: flex;
         flex-direction: column;
+    }
+}
+
+/* ApexCharts does it own theming, but does it through JavaScript */
+/* CSS is meant for styling, not JavaScript! */
+figure.chart .apexcharts-canvas {
+    & text {
+        fill: var(--font-color);
+    }
+
+    & foreignObject span.apexcharts-legend-text {
+        color: var(--font-color) !important;
+    }
+
+    & .apexcharts-tooltip {
+        background-color: var(--background-color) !important;
+
+        & .apexcharts-tooltip-title {
+            background-color: var(--background-color) !important;
+        }
+    }
+
+    & .apexcharts-xaxistooltip {
+        background-color: var(--background-color) !important;
+    }
+
+    & .apexcharts-xaxistooltip-text {
+        color: var(--font-color) !important;
     }
 }
