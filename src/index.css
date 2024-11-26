@@ -105,7 +105,7 @@ header {
 
 form.noise {
     display: grid;
-    grid-template-columns: auto auto;
+    grid-template-columns: 1fr 1fr;
 
     row-gap: 0.5em;
     column-gap: 0.25em;
@@ -131,6 +131,7 @@ form.noise {
         grid-column: span 2;
         display: grid;
         grid-template-columns: subgrid;
+        grid-template-areas: "label input";
 
         align-items: baseline;
     }
@@ -239,6 +240,13 @@ label {
     width: 100%;
 }
 
+label {
+    display: grid;
+    grid-template-areas:
+        "label"
+        "input";
+}
+
 fieldset {
     width: 100%;
 }
@@ -300,24 +308,20 @@ ol.page {
     }
 
     form.noise {
-        display: flex;
-        grid-template-columns: none;
-        flex-direction: column;
-
-        & fieldset {
-            display: flex;
-            flex-direction: column;
-        }
-
         & label {
-            display: flex;
-            flex-direction: column;
+            grid-template-columns: auto;
+            grid-template-areas:
+                "label"
+                "input";
         }
     }
 
     form.history {
-        display: flex;
-        flex-direction: column;
+        grid-template-columns: 1fr 1fr;
+
+        &>label {
+            grid-column: span 2;
+        }
     }
 }
 
