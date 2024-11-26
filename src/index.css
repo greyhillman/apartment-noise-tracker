@@ -7,17 +7,28 @@
 
 :root {
     --golden-ratio: 1.61803399;
+
     --font-color: black;
+    --disabled-font-color: gray;
+
     --background-color: white;
+    --disabled-background-color: rgb(226, 226, 226);
+
     --button-color: rgb(227, 227, 227);
+
     --link-color: blue;
 }
 
 @media (prefers-color-scheme: dark) {
     :root {
         --font-color: white;
+        --disabled-font-color: rgb(233, 233, 233);
+
         --background-color: #202020;
+        --disabled-background-color: #606060;
+
         --button-color: #424242;
+
         --link-color: lightblue;
     }
 }
@@ -181,12 +192,22 @@ a.button {
     border: solid 2px var(--font-color);
     border-radius: 0.5em;
 
-    &:hover {
-        filter: brightness(90%);
+    &:disabled {
+        cursor: default;
+
+        color: var(--disabled-font-color);
+        background-color: var(--disabled-background-color);
+        border-color: var(--disabled-font-color);
     }
 
-    &:active {
-        filter: brightness(80%);
+    &:not(:disabled) {
+        &:hover {
+            filter: brightness(90%);
+        }
+
+        &:active {
+            filter: brightness(80%);
+        }
     }
 }
 
@@ -194,12 +215,14 @@ a.button {
 
     button,
     a.button {
-        &:hover {
-            filter: brightness(110%);
-        }
+        &:not(:disabled) {
+            &:hover {
+                filter: brightness(110%);
+            }
 
-        &:active {
-            filter: brightness(120%);
+            &:active {
+                filter: brightness(120%);
+            }
         }
     }
 }
