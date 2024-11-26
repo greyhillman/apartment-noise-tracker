@@ -64,15 +64,15 @@ export const HistoryTable: Component<Props> = props => {
                         <Match when={() => !props.loading}>
                             <For each={noises()}>
                                 {noise => <tr>
-                                    <td>
+                                    <td data-label="Time">
                                         <LocalDateTime value={noise.datetime}>
                                             {Temporal.PlainDateTime.from(noise.datetime).toLocaleString("en-US", { dateStyle: "medium", timeStyle: "short" })}
                                         </LocalDateTime>
                                     </td>
-                                    <td>{noise.noise}</td>
-                                    <td>{noise.listener}</td>
-                                    <td>{noise.source}</td>
-                                    <td>{noise.severity}</td>
+                                    <td data-label="Noise">{noise.noise}</td>
+                                    <td data-label="Location">{noise.listener}</td>
+                                    <td data-label="Source">{noise.source}</td>
+                                    <td data-label="Severity">{noise.severity}</td>
                                 </tr>}
                             </For>
                         </Match>

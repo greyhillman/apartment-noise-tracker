@@ -17,6 +17,8 @@
     --button-color: rgb(227, 227, 227);
 
     --link-color: blue;
+
+    --table-stripe-color: #e6e6e6;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -30,6 +32,8 @@
         --button-color: #424242;
 
         --link-color: lightblue;
+
+        --table-stripe-color: #030303;
     }
 }
 
@@ -245,6 +249,15 @@ label {
     grid-template-areas:
         "label"
         "input";
+
+    &>span.label {
+        grid-area: label;
+    }
+
+    &>select,
+    input {
+        grid-area: input;
+    }
 }
 
 fieldset {
@@ -353,6 +366,10 @@ figure.chart .apexcharts-canvas {
     }
 }
 
+table {
+    overflow-x: scroll;
+}
+
 figure.table {
     display: grid;
     grid-template-areas:
@@ -382,5 +399,55 @@ figure.table {
 
     &>figcaption {
         grid-area: caption;
+    }
+}
+
+@media (width <=60em) {
+
+    /* Main idea comes from this page: https://htmltable.com/responsive/ */
+    table,
+    thead,
+    tbody,
+    tfoot,
+    tr,
+    th,
+    td {
+        display: block;
+    }
+
+    thead {
+        display: none;
+    }
+
+    tbody {
+        display: grid;
+        grid-template-columns: auto auto;
+
+        row-gap: 1em;
+
+        &>tr {
+            display: grid;
+            grid-template-columns: subgrid;
+            grid-column: span 2;
+
+            &>td {
+                display: grid;
+                grid-template-columns: subgrid;
+                grid-column: span 2;
+            }
+        }
+    }
+
+    tr>td {
+        border: none;
+        padding: 0;
+    }
+
+    tr:nth-of-type(2n) {
+        background-color: var(--table-stripe-color);
+    }
+
+    td::before {
+        content: attr(data-label);
     }
 }
