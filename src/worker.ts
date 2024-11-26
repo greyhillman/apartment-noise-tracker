@@ -2,6 +2,8 @@
 
 import { Temporal } from "@js-temporal/polyfill";
 import { insertNoise, Noise, openDatabase, selectNoises } from "./db";
+import { createObjectCsvStringifier } from "csv-writer";
+import { CsvStringifier } from "csv-writer/src/lib/csv-stringifiers/abstract";
 
 export type { };
 declare const self: DedicatedWorkerGlobalScope;
@@ -43,8 +45,7 @@ interface DataListMessage {
     values: string[];
 }
 
-interface SearchHistoryMessage {
-    type: "history-search";
+interface HistoryFilter {
     from: string | null;
     to: string | null;
 
@@ -52,6 +53,11 @@ interface SearchHistoryMessage {
     location: string;
     source: string;
     severity: string;
+}
+
+interface SearchHistoryMessage {
+    type: "history-search";
+    filter: HistoryFilter;
 }
 
 interface HistoryMessage {
@@ -62,6 +68,16 @@ interface HistoryMessage {
         };
     };
     logs: Noise[];
+}
+
+interface GetCsvHistoryMessage {
+    type: "csv";
+    filter: HistoryFilter;
+}
+
+interface CsvHistoryMessage {
+    type: "csv";
+    value: string;
 }
 
 interface ErrorMessage {
@@ -83,6 +99,7 @@ export type IncomingMessage
     | GetNoiseMessage
     | GetDatalistMessage
     | SearchHistoryMessage
+    | GetCsvHistoryMessage
     ;
 
 export type OutgoingMessage
@@ -90,6 +107,7 @@ export type OutgoingMessage
     | NoiseMessage
     | HistoryMessage
     | DataListMessage
+    | CsvHistoryMessage
     | ErrorMessage
     ;
 
@@ -169,13 +187,15 @@ async function handleMessage(message: MessageEvent<IncomingMessage>) {
 
         const transaction = db.transaction("noises");
 
+        const filter = data.filter;
+
         let dateRange: IDBKeyRange | null = null;
-        if (data.from && data.to) {
-            dateRange = IDBKeyRange.bound(data.from, data.to);
-        } else if (data.from) {
-            dateRange = IDBKeyRange.lowerBound(data.from);
-        } else if (data.to) {
-            dateRange = IDBKeyRange.upperBound(data.to);
+        if (filter.from && filter.to) {
+            dateRange = IDBKeyRange.bound(filter.from, filter.to);
+        } else if (filter.from) {
+            dateRange = IDBKeyRange.lowerBound(filter.from);
+        } else if (filter.to) {
+            dateRange = IDBKeyRange.upperBound(filter.to);
         }
 
         let logs: Noise[] = [];
@@ -184,10 +204,10 @@ async function handleMessage(message: MessageEvent<IncomingMessage>) {
         while (cursor) {
             const noise = cursor.value;
 
-            const matchesLocation = !data.location || noise.listener.includes(data.location);
-            const matchesSource = !data.source || noise.source.includes(data.source);
-            const matchesSeverity = !data.severity || noise.severity.includes(data.severity);
-            const matchesNoise = !data.noise || noise.noise.includes(data.noise);
+            const matchesLocation = !filter.location || noise.listener.includes(filter.location);
+            const matchesSource = !filter.source || noise.source.includes(filter.source);
+            const matchesSeverity = !filter.severity || noise.severity.includes(filter.severity);
+            const matchesNoise = !filter.noise || noise.noise.includes(filter.noise);
 
             if (matchesLocation && matchesSource && matchesSeverity && matchesNoise) {
                 logs.push(noise);
@@ -212,7 +232,62 @@ async function handleMessage(message: MessageEvent<IncomingMessage>) {
             chart: chart,
             logs: logs,
         })
+    } else if (data.type === "csv") {
+        const logs = await search(data.filter);
+
+        const csvWriter = createObjectCsvStringifier({
+            header: [
+                { id: "datetime", title: "Date/Time" },
+                { id: "listener", title: "Where I was" },
+                { id: "source", title: "Where noise came from" },
+                { id: "noise", title: "Noise" },
+                { id: "severity", title: "How loud it was" },
+            ],
+        });
+
+        let content = "";
+        content += csvWriter.getHeaderString();
+        content += csvWriter.stringifyRecords(logs);
+
+        postMessage({
+            type: "csv",
+            value: content,
+        });
     }
+}
+
+async function search(filter: HistoryFilter) {
+    const db = await openDatabase();
+
+    const transaction = db.transaction("noises");
+
+    let dateRange: IDBKeyRange | null = null;
+    if (filter.from && filter.to) {
+        dateRange = IDBKeyRange.bound(filter.from, filter.to);
+    } else if (filter.from) {
+        dateRange = IDBKeyRange.lowerBound(filter.from);
+    } else if (filter.to) {
+        dateRange = IDBKeyRange.upperBound(filter.to);
+    }
+
+    let logs: Noise[] = [];
+    let cursor = await transaction.store.openCursor(dateRange, "prev");
+    while (cursor) {
+        const noise = cursor.value;
+
+        const matchesLocation = !filter.location || noise.listener.includes(filter.location);
+        const matchesSource = !filter.source || noise.source.includes(filter.source);
+        const matchesSeverity = !filter.severity || noise.severity.includes(filter.severity);
+        const matchesNoise = !filter.noise || noise.noise.includes(filter.noise);
+
+        if (matchesLocation && matchesSource && matchesSeverity && matchesNoise) {
+            logs.push(noise);
+        }
+
+        cursor = await cursor.continue();
+    }
+
+    return logs;
 }
 
 async function addNoise(message: NoiseMessage) {

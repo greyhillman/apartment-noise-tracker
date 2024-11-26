@@ -148,12 +148,34 @@ input {
     border: solid 2px var(--font-color);
 }
 
-button {
+button,
+a.button {
     color: var(--font-color);
     background-color: var(--button-color);
 }
 
-button {
+a.button {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    column-gap: 0.5em;
+
+    text-decoration: none;
+    width: auto;
+}
+
+a.button.download {
+    &::after {
+        content: "";
+        width: 1em;
+        height: 1em;
+        background-image: url(./icons/download.svg);
+        background-size: contain;
+    }
+}
+
+button,
+a.button {
     cursor: pointer;
 
     border: solid 2px var(--font-color);
@@ -169,7 +191,9 @@ button {
 }
 
 @media (prefers-color-scheme: dark) {
-    button {
+
+    button,
+    a.button {
         &:hover {
             filter: brightness(110%);
         }
@@ -183,10 +207,9 @@ button {
 input[type="text"],
 input[type="time"],
 input[type="date"],
+a.button,
 button {
     padding: 0.25em 0.5em;
-
-    width: 100%;
 }
 
 label {
@@ -230,6 +253,10 @@ ol.page {
 
         text-align: center;
         vertical-align: middle;
+
+        &>button {
+            width: 100%;
+        }
     }
 }
 
@@ -296,5 +323,37 @@ figure.chart .apexcharts-canvas {
 
     & .apexcharts-xaxistooltip-text {
         color: var(--font-color) !important;
+    }
+}
+
+figure.table {
+    display: grid;
+    grid-template-areas:
+        "count download"
+        "table table"
+        "pages pages"
+        "caption caption";
+    align-items: baseline;
+    row-gap: 0.5em;
+
+    &>label {
+        grid-area: count;
+    }
+
+    &>a.download {
+        grid-area: download;
+        justify-self: flex-end;
+    }
+
+    &>table {
+        grid-area: table;
+    }
+
+    &>ol.page {
+        grid-area: pages;
+    }
+
+    &>figcaption {
+        grid-area: caption;
     }
 }

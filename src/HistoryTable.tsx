@@ -1,13 +1,12 @@
-import { action, useSubmission } from "@solidjs/router";
 import { Component, createEffect, createResource, createSignal, For, Match, onCleanup, Suspense, Switch, useContext } from "solid-js";
 import { Noise } from "./db";
-import { WorkerContext } from "./WorkerProvider";
 import { LocalDateTime } from "./LocalDateTime";
 import { Temporal } from "@js-temporal/polyfill";
 import { PageSelector } from "./PageSelector";
 
 interface Props {
     value: Noise[];
+    csvUrl: string;
     loading: boolean;
 
     selectedPage: number;
@@ -35,7 +34,7 @@ export const HistoryTable: Component<Props> = props => {
     }
 
     return (
-        <figure>
+        <figure class="table">
             <label>
                 <span class="label">Count per page</span>
                 <select value={count()} onChange={event => onChangeCount(+event.target.value)}>
@@ -44,6 +43,7 @@ export const HistoryTable: Component<Props> = props => {
                     <option value="50">50</option>
                 </select>
             </label>
+            <a class="button download" href={props.csvUrl} download="logs.csv">Download CSV</a>
             <table>
                 <thead>
                     <tr>

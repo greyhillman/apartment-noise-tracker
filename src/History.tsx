@@ -26,6 +26,7 @@ export const History: Component<{}> = props => {
 
     const [chart, setChart] = createSignal<{ [day: number]: { [hour: number]: number } }>({});
     const [logs, setLogs] = createSignal<Noise[]>([]);
+    const [csvUrl, setCsvUrl] = createSignal<string>();
 
     const [searching, setSearching] = createSignal(false);
 
@@ -55,6 +56,13 @@ export const History: Component<{}> = props => {
             setChart(message.data.chart);
             setLogs(message.data.logs);
             setSearching(false);
+        } else if (message.data.type === "csv") {
+            const csvContent = message.data.value;
+            const blob = new Blob([csvContent], {
+                type: "text/csv;charset=utf8,"
+            });
+            const url = URL.createObjectURL(blob);
+            setCsvUrl(url);
         }
     }
 
@@ -162,15 +170,22 @@ export const History: Component<{}> = props => {
     };
 
     const search = () => {
-        worker.postMessage({
-            type: "history-search",
+        const filter = {
             from: fromDate()?.toString(),
             to: toDate()?.toString(),
             location: location(),
             noise: noise(),
             severity: severity(),
             source: source(),
+        };
+        worker.postMessage({
+            type: "history-search",
+            filter: filter,
         });
+        worker.postMessage({
+            type: "csv",
+            filter: filter,
+        })
 
         setSearching(true);
         setSelectedPage(1);
@@ -269,7 +284,13 @@ export const History: Component<{}> = props => {
             </section>
             <section>
                 <header>Logs</header>
-                <HistoryTable value={logs()} loading={searching()} selectedPage={selectedPage()} setSelectedPage={setSelectedPage} />
+                <HistoryTable
+                    value={logs()}
+                    csvUrl={csvUrl()}
+                    loading={searching()}
+                    selectedPage={selectedPage()}
+                    setSelectedPage={setSelectedPage}
+                />
             </section>
         </article>
     );
