@@ -19,6 +19,9 @@
     --link-color: blue;
 
     --table-stripe-color: #e6e6e6;
+
+    --error-color: red;
+    --error-background-color: rgba(255, 0, 0, 0.3);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -34,6 +37,8 @@
         --link-color: lightblue;
 
         --table-stripe-color: #030303;
+
+        --error-color: red;
     }
 }
 
@@ -138,6 +143,30 @@ form.noise {
         grid-template-areas: "label input";
 
         align-items: baseline;
+    }
+
+    &>section.error {
+        grid-column: span 2;
+    }
+}
+
+section.error {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+    background-color: var(--error-background-color);
+
+    padding: 0.5em;
+    column-gap: 0.5em;
+
+    &::before {
+        content: "";
+        width: 1.5em;
+        height: 1.5em;
+        mask: url(./icons/error.svg);
+        mask-size: contain;
+        background-color: var(--error-color);
     }
 }
 

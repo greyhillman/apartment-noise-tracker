@@ -139,7 +139,7 @@ async function handleMessage(message: MessageEvent<IncomingMessage>) {
     const data = message.data;
 
     if (data.type === "noise") {
-        await addNoise(data)
+        await addNoise(data);
 
         self.postMessage(data);
     } else if (data.type === "noise-get") {

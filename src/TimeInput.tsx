@@ -6,6 +6,8 @@ interface Props {
 
     value: Temporal.PlainTime;
     onChange: (value: Temporal.PlainTime) => void | Promise<void>;
+
+    required?: boolean;
 }
 
 export const TimeInput: Component<Props> = props => {
@@ -27,6 +29,7 @@ export const TimeInput: Component<Props> = props => {
             type="time"
             value={value()}
             onChange={async event => await onChange(event.target.value)}
+            required={props.required}
         />
     )
 }

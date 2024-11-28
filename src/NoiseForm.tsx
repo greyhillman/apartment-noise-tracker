@@ -1,4 +1,4 @@
-import { Component, createEffect, createSignal, For, JSX, onCleanup, useContext } from "solid-js";
+import { Component, createEffect, createSignal, For, JSX, onCleanup, Show, useContext } from "solid-js";
 import { DateInput } from "./DateInput";
 import { Temporal } from "@js-temporal/polyfill";
 import { TimeInput } from "./TimeInput";
@@ -17,6 +17,10 @@ interface Data {
     source: string;
     noise: string;
     severity: string;
+}
+
+interface Errors {
+    date?: string;
 }
 
 export const NoiseForm: Component<{}> = props => {
@@ -49,7 +53,7 @@ export const NoiseForm: Component<{}> = props => {
         });
     }
 
-    const onMessage = (message: MessageEvent<OutgoingMessage>) => {
+    const onMessage = (message: MessageEvent<any>) => {
         if (!isOutgoingMessage(message)) {
             return;
         }
@@ -72,12 +76,25 @@ export const NoiseForm: Component<{}> = props => {
                     setSources(message.data.values);
                     break;
             }
+        } else if (message.data.type === "error") {
+            if (message.data.message.type === "noise") {
+                console.error(message.data.error);
+                setFormError(message.data.error);
+
+                setSubmitting(false);
+            }
         }
     };
+    const onError = (message: ErrorEvent) => {
+        console.error(message.message);
+        setFormError(message.message);
+    }
 
     worker.addEventListener("message", onMessage);
+    worker.addEventListener("error", onError);
     onCleanup(() => {
         worker.removeEventListener("message", onMessage);
+        worker.removeEventListener("error", onError);
     });
 
     createEffect(oldSubmitting => {
@@ -107,6 +124,9 @@ export const NoiseForm: Component<{}> = props => {
     });
 
     const submit = action(async () => {
+        setSubmitting(true);
+        setFormError();
+
         worker.postMessage({
             type: "noise",
             datetime: data.date.toPlainDateTime(data.time).toString(),
@@ -115,8 +135,6 @@ export const NoiseForm: Component<{}> = props => {
             noise: data.noise,
             severity: data.severity,
         });
-
-        setSubmitting(true);
     });
 
     const reset = () => {
@@ -139,6 +157,8 @@ export const NoiseForm: Component<{}> = props => {
         reset();
     }
 
+    const [formError, setFormError] = createSignal<any>();
+
     return (
         <form class="noise" method="post" action={submit} onReset={onReset}>
             <fieldset disabled={isSubmitting()}>
@@ -146,12 +166,22 @@ export const NoiseForm: Component<{}> = props => {
 
                 <label>
                     <span class="label">Date</span>
-                    <DateInput name="time-date" onChange={value => setData("date", value)} value={data.date} />
+                    <DateInput
+                        name="time-date"
+                        onChange={value => setData("date", value)}
+                        value={data.date}
+                        required
+                    />
                 </label>
 
                 <label>
                     <span class="label">Time</span>
-                    <TimeInput name="time-time" onChange={value => setData("time", value)} value={data.time} />
+                    <TimeInput
+                        name="time-time"
+                        onChange={value => setData("time", value)}
+                        value={data.time}
+                        required
+                    />
                 </label>
 
                 <button type="button" onClick={setTimeToNow}>Set to now</button>
@@ -236,6 +266,12 @@ export const NoiseForm: Component<{}> = props => {
             <button type="reset" disabled={isSubmitting()} onClick={reset}>
                 Reset
             </button>
+
+            <Show when={formError()}>
+                <section class="error">
+                    <p>{formError()}</p>
+                </section>
+            </Show>
         </form>
     );
 }
