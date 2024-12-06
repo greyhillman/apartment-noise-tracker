@@ -42,6 +42,11 @@
     }
 }
 
+:root {
+    /* font-family: serif; */
+    font-family: sans-serif;
+}
+
 a {
     color: var(--link-color);
 
