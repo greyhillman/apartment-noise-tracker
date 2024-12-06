@@ -104,7 +104,7 @@ table {
 
     & td,
     th {
-        border: solid 2px black;
+        border: solid 2px var(--font-color);
         padding: 0.25em;
     }
 }
