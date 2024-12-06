@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "npx playwright test",
+    "test:update": "npx playwright test --update-snapshots",
     "install": "npx playwright install"
   },
   "keywords": [],
