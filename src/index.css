@@ -75,10 +75,6 @@ article>header {
     font-size: calc(1em * var(--golden-ratio));
 }
 
-section>header {
-    font-size: 1em;
-}
-
 #root {
     width: 40em;
 }
