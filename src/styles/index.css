@@ -165,7 +165,7 @@ section.error {
         content: "";
         width: 1.5em;
         height: 1.5em;
-        mask: url(./icons/error.svg);
+        mask: url(../icons/error.svg);
         mask-size: contain;
         background-color: var(--error-color);
     }
@@ -215,7 +215,7 @@ a.button.download {
         content: "";
         width: 1em;
         height: 1em;
-        background-image: url(./icons/download.svg);
+        background-image: url(../icons/download.svg);
         background-size: contain;
     }
 }
