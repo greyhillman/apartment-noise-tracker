@@ -1,0 +1,33 @@
+* {
+    box-sizing: border-box;
+}
+
+* {
+    font: inherit;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+}
+
+/* We override lists the default of having list numbers/lettering
+ * is more exceptional than the default.
+ */
+ul,
+ol {
+    list-style: none;
+}
+
+fieldset {
+    display: block;
+    border: none;
+
+    & legend {
+        display: block;
+    }
+
+    & legend {
+        padding-inline: 0;
+    }
+}
